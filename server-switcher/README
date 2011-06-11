@@ -1,0 +1,136 @@
+   Copyright 2003 Jonathan Gallimore
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+Acknowledgements
+----------------
+
+Miguel Fiallos, Head of MIS, British Red Cross
+Richard Berends, Technical Director, LanKind Ltd
+
+What is the server switcher?
+----------------------------
+
+The server switcher is an extension to the standard Novell client software for Windows. It specifies the server to log into for the user automatically, based on their IP address.
+
+Its designed for WAN based environments; where software is typically run from a file share on a server.
+
+Its most useful for laptop users who frequently move between sites.
+
+Pre-requisites
+--------------
+
+You'll need to following for the server switcher to work:
+
+A WAN based on TCP/IP
+Map drives using %FILE_SERVER in your login scripts
+How its used
+
+Consider the following scenario: An organisation has several branches, all linked by 64k frame relay. Each branch has a NetWare server. Each branch uses the corporate finance system, which is several hundred megabytes to install. Rather than install it on every PC, one copy is available on each branch server, in the same location:- DATA:APPS\FS.
+
+Users at branch A might have a login script like this:
+
+MAP ROOT H:=%HOME_DIRECTORY
+MAP ROOT P:=BRANCHA/DATA:APPS\FS
+MAP ROOT S:=BRANCHA/DATA:SHARED
+If the user then moved to branch B, and plugged their laptop in, and logged in, it would work, but when they fire up the financials system, it would run over the wire, and would be very slow.
+
+If the login script was changed to (note the %FILE_SERVER):
+
+MAP ROOT H:=%HOME_DIRECTORY
+MAP ROOT P:=%FILE_SERVER/DATA:APPS\FS
+MAP ROOT S:=BRANCHA/DATA:SHARED
+It would run much better; providing that the user selects the correct server from the login screen.
+
+This is where the server switcher will help- it will override the server option set on the login screen, based on their IP address (naturally you'll need something like DHCP for it to work).
+
+Installing
+----------
+
+The server switcher needs to be installed on each workstation you want to use it on. Installation consists of the following:
+
+Copy the srvswt.dll file to the windows\system32 (or windows\system on Win9X) directory.
+Create a config file for each tree, in our case we only need the one. More on how to do this in a moment.
+Copy the necessary registry setting.
+I've provided a batch file to perform a sample installation, you can just edit the files and use this if you wish.
+
+The config file
+---------------
+
+You will need to create a config file for each tree in your system (I imagine most places only have one). The config file is very simple. It has one line for each subnet or branch on your WAN.
+
+The lines take the format:
+
+SERVERNAME=NETWORKIP/BITS
+In case you're wondering what "bits" means, it's the number of bits that make up the subnet mask:
+
+255.0.0.0 = 8 bits
+255.255.0.0 = 16 bits
+255.255.255.0 = 24 bits.
+
+So the config file for the WAN shown above is:
+
+BRANCHA=192.168.1.0/24
+BRANCHB=192.168.2.0/24
+BRANCHC=192.168.3.0/24
+BRANCHD=192.168.4.0/24
+This can be saved anywhere on the local machine. I tend to call it <treename>.cfg and save it in the root of C:.
+
+The registry
+------------
+
+The following registry settings are needed for the server switcher to work:
+
+On Windows NT/2000/XP, create a key called Srvswt under [HKEY_LOCAL_MACHINE\SOFTWARE\Novell\Graphical Login\NWLGE]. On Windows 95/98/ME, Create a key called Srvswt under [HKEY_LOCAL_MACHINE\Network\Novell\System Config\Network Provider\Graphical Login\NWLGE].
+Add the following values in the new key:
+"LoginExtName"="srvswt.dll"
+"LoginExtDesc"="Server Switcher"
+"LoginExtType"=dword:00008002
+"Test"="c:\test.cfg"
+The first three values are fixed. For the last value, replace test with the name of your tree, and replace c:\test.cfg with the path and file name of your config file.
+
+Automating the install
+----------------------
+
+Obviously, doing this manually on every PC is going to be tedious. I'd recommend using the files that I've provided, and editing them to suit your needs. Here's what each file does:
+
+Setup.bat - run this to copy the files to the right location, and install the registry settings
+Client1.reg - general client settings, use this if you think its useful.
+Setupnt.reg - registry settings to import on Windows NT/2000/XP machines
+Setup95.reg - registry settings to import on Windows 95/98/ME machines
+Test.cfg - config file
+Here's my quick way of rolling it out
+
+Create the config file by editing test.cfg, and renaming it.
+Decide where you want the config file to be copied to on each PC, and amend setup.bat accordingly - its referenced twice, so be careful.
+Edit both setupnt.reg and setup95.reg to reflect your tree name, and the final location of your config file on your client machines
+Copy all the files to a common place on all your servers, and add a line to run setup.bat to your login script.
+Afterthoughts
+
+I hope this has been helpful, this guide was put together pretty quickly.
+
+I always appreciate feedback, so please let me know how you get on. If you run into difficulty, I'll try and help.
+
+My aim when I was writing this was to produce a simple quick login - effectively removing the 'Advanced' button from the login screen, as it has often caused confusion. I'd be interested to hear from other people if they have another method for doing this.
+
+For the future, I'm planning more interaction with the login screen, so the default set in the Server field is what the server switcher thinks the server should be, but the user has the opportunity to change it if they wish.
+
+Common problems
+
+The only real common problem I've seen relates to resolving the server name. To ensure that this isn't a problem for you, make sure:
+
+You've tested in a lab, or piloted with one or two users
+Naming works correctly in your environment
+On Client 4.83SP1 there is a known issue. If this affects you, there is a patch available, or you could try Client 4.9.
+
+Jonathan Gallimore, jon@jrg.me.uk
