@@ -36,7 +36,7 @@ The following functions can be carried out:
 View trustee rights assignments for a file / folder and all subfolders
 View inherited rights filters (IRFs)
 Set trustee rights for files and folder 
-	(or add / revoke rights using + and Ð syntax)
+	(or add / revoke rights using + and - syntax)
 Set IRFs
 Backup trustee rights to a text file for a folder and any sub-folders
 Restore rights from a text file
