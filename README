@@ -73,8 +73,8 @@ Nwrights /R=<text file> [/U=<username>] [/P=<password>]
 
 Rights
 
-R Ð Read	W Ð Write	C Ð Create	M Ð Modify	E Ð Erase
-F Ð Filescan	A Ð Access Control 		S Ð Supervisor
+R - Read	W - Write	C - Create	M - Modify	E - Erase
+F - Filescan	A - Access Control 		S - Supervisor
 You can use + or Ð to add or revoke to and from existing rights. 
 Use REM to remove a trustee.
 
