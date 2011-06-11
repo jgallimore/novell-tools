@@ -1,0 +1,4 @@
+nwrights.c(613): Warning! W202: Symbol 'NSBackupFile' has been defined, but not referenced
+nwrights.c(612): Warning! W202: Symbol 'NWFileHandle' has been defined, but not referenced
+nwrights.c(609): Warning! W202: Symbol 'FileHandle' has been defined, but not referenced
+nwrights.c(604): Warning! W202: Symbol 'Path' has been defined, but not referenced

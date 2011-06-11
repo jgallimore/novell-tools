@@ -1,0 +1,37 @@
+#
+# WARNING: Don't edit this file, it is generated automatically.
+#          Any changes made here will be lost.
+#
+output nwrights.nlm
+description "NetWare Rights Utility"
+version 1,0,0
+copyright "Copyright 2003 J. Gallimore"
+threadname "nwrights_p"
+screenname "NetWare Rights Utility"
+type 0
+stack 8192
+input /cygdrive/c/novell/nlm/imports/nwpre.o
+input nwrights.o
+import NWDSFreeContext,
+import NWDSLogout,
+import NWAddTrustee,
+import NWDSAuthenticateConn,
+import NWIntScanForTrustees,
+import NWScanNSEntryInfo2,
+import NWDeleteTrustee,
+import NWDeallocateDirectoryHandle,
+import NWGetLongName,
+import NWGetNSPath,
+import NWCCCloseConn,
+import NWIsDSAuthenticated,
+import NWDSCreateContextHandle,
+import NWDSMapNameToID,
+import NWDSMapIDToName,
+import NWAllocTempNSDirHandle2,
+import NWDSSetContext,
+import NWSetNSEntryDOSInfo,
+import NWDSLogin,
+import NWGetNSEntryInfo,
+import NWCCOpenConnByName
+import @/cygdrive/c/novell/ndk/nwsdk/imports/clib.imp
+module clib
